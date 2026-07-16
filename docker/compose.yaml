@@ -1,0 +1,83 @@
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: ${ioailab_IMAGE:-ioailab:1.0.0a1}
+    working_dir: /workspace/ioailab
+    stdin_open: true
+    tty: true
+    network_mode: host
+    shm_size: "16gb"
+    entrypoint: ["bash", "-lc"]
+    healthcheck:
+      disable: true
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: all
+      ACCEPT_EULA: "Y"
+      OMNI_ENV_PRIVACY_CONSENT: "Y"
+      OMNI_KIT_ALLOW_ROOT: "1"
+      CUDA_HOME: /usr/local/cuda
+      CUDA_PATH: /usr/local/cuda
+      PYTHON_BIN: /isaac-sim/python.sh
+      PATH: /usr/local/cuda/bin:/isaac-sim:/isaac-sim/kit/python/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ..:/workspace/ioailab:rw
+      - isaac-sim-cache-kit:/isaac-sim/kit/cache:rw
+      - isaac-sim-cache-ov:/root/.cache/ov:rw
+      - isaac-sim-cache-pip:/root/.cache/pip:rw
+      - isaac-sim-cache-gl:/root/.cache/nvidia/GLCache:rw
+      - isaac-sim-cache-compute:/root/.nv/ComputeCache:rw
+      - isaac-sim-logs:/root/.nvidia-omniverse/logs:rw
+      - isaac-sim-data:/root/.local/share/ov/data:rw
+      - isaac-sim-docs:/root/Documents:rw
+    command: exec bash
+
+  dev-gui:
+    profiles: ["gui"]
+    extends:
+      service: dev
+    command: ["sleep infinity"]
+    environment:
+      DISPLAY: ${DISPLAY:-}
+      XAUTHORITY: ${XAUTHORITY:-/tmp/.docker.xauth}
+      QT_X11_NO_MITSHM: "1"
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: all
+      ACCEPT_EULA: "Y"
+      OMNI_ENV_PRIVACY_CONSENT: "Y"
+      OMNI_KIT_ALLOW_ROOT: "1"
+      CUDA_HOME: /usr/local/cuda
+      CUDA_PATH: /usr/local/cuda
+      PYTHON_BIN: /isaac-sim/python.sh
+      PATH: /usr/local/cuda/bin:/isaac-sim:/isaac-sim/kit/python/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    volumes:
+      - ..:/workspace/ioailab:rw
+      - isaac-sim-cache-kit:/isaac-sim/kit/cache:rw
+      - isaac-sim-cache-ov:/root/.cache/ov:rw
+      - isaac-sim-cache-pip:/root/.cache/pip:rw
+      - isaac-sim-cache-gl:/root/.cache/nvidia/GLCache:rw
+      - isaac-sim-cache-compute:/root/.nv/ComputeCache:rw
+      - isaac-sim-logs:/root/.nvidia-omniverse/logs:rw
+      - isaac-sim-data:/root/.local/share/ov/data:rw
+      - isaac-sim-docs:/root/Documents:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY:-/tmp/.docker.xauth}:${XAUTHORITY:-/tmp/.docker.xauth}:rw
+
+volumes:
+  isaac-sim-cache-kit:
+  isaac-sim-cache-ov:
+  isaac-sim-cache-pip:
+  isaac-sim-cache-gl:
+  isaac-sim-cache-compute:
+  isaac-sim-logs:
+  isaac-sim-data:
+  isaac-sim-docs:

@@ -1,0 +1,40 @@
+motion_plan:
+  arm: left
+  steps:
+    - name: $config.pick_approach_step_name
+      description: Pre-grasp pose offset behind and above the selected sorting object.
+      target:
+        asset: $config.selected_sorting_object
+        offset: [-0.12, 0.0, 0.025]
+        quat_xyzw: [1.0, 0.0, 0.0, 0.0]
+        frame: world
+      gripper_open: true
+
+    - name: $config.pick_descend_step_name
+      description: Align horizontally onto the selected sorting object's grasp pose.
+      target:
+        asset: $config.selected_sorting_object
+        offset: [-0.01, 0.0, 0.025]
+        quat_xyzw: [1.0, 0.0, 0.0, 0.0]
+        frame: world
+      gripper_open: true
+
+    - name: close_left_gripper
+      description: Close and hold the gripper to secure the selected sorting object.
+      gripper_open: false
+      hold_steps: 25
+
+    - name: $config.pick_lift_step_name
+      description: Lift the selected sorting object clear of the table.
+      target:
+        asset: $config.selected_sorting_object
+        offset: [0.0, 0.0, 0.22]
+        quat_xyzw: [1.0, 0.0, 0.0, 0.0]
+        frame: world
+      gripper_open: false
+
+    - name: $config.pick_carry_step_name
+      description: Fold the arm to the ready carry posture for navigation.
+      joint_positions: $config.left_arm_ready_joint_positions
+      gripper_open: false
+      hold_steps: 10

@@ -1,0 +1,40 @@
+motion_plan:
+  arm: left
+  steps:
+    - name: approach_shelf
+      description: Stage in front of the shelf opening, facing the deck.
+      target:
+        asset: shelf_deck
+        offset: [0.0, 0.26, 0.16]
+        quat_xyzw: [0.70710678, -0.70710678, 0.0, 0.0]
+        frame: world
+      gripper_open: false
+
+    - name: insert_to_shelf
+      description: Insert the cube to the release pose on the deck.
+      target:
+        asset: shelf_deck
+        offset: [0.0, 0.02, 0.150]
+        quat_xyzw: [0.70710678, -0.70710678, 0.0, 0.0]
+        frame: world
+      gripper_open: false
+
+    - name: release_on_shelf
+      description: Open and hold the gripper to settle the cube on the shelf.
+      target:
+        asset: shelf_deck
+        offset: [0.0, 0.02, 0.150]
+        quat_xyzw: [0.70710678, -0.70710678, 0.0, 0.0]
+        frame: world
+      gripper_open: true
+      hold_steps: 35
+
+    - name: retreat_from_shelf
+      description: Withdraw from the shelf along the approach path.
+      target:
+        asset: shelf_deck
+        offset: [0.0, 0.26, 0.16]
+        quat_xyzw: [0.70710678, -0.70710678, 0.0, 0.0]
+        frame: world
+      gripper_open: true
+      hold_steps: 20

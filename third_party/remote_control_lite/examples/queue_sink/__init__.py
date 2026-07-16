@@ -1,0 +1,1 @@
+"""Queue sink usage examples."""

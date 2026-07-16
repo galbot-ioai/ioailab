@@ -1,0 +1,1 @@
+recursive-include src/remote_control_lite/libs *.so

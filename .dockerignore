@@ -1,0 +1,66 @@
+# VCS
+.git
+.gitignore
+
+# Python caches / environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+ENV/
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Test / coverage / type-checker caches
+.coverage
+.coverage.*
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+htmlcov/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Editors / local tooling
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.python-version
+.codex
+
+# Secrets / local config
+.env
+.env.*
+*.local
+
+# Isaac Sim / runtime caches and outputs dropped into the working dir by
+# (often root-owned) container runs. These are not part of the build context;
+# excluding them also avoids "permission denied" while BuildKit packs the
+# context (e.g. nv_shadercache/GLCache is mode 700 root).
+nv_shadercache/
+shadercache/
+data/
+tmp/
+site/
+book/
+logs/
+outputs/
+graphify-out/
+
+# Heavy local/vendor assets
+3rd_party/
+third_party/
+!third_party/
+third_party/*
+!third_party/remote_control_lite/
+!third_party/remote_control_lite/**

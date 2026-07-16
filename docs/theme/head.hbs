@@ -1,0 +1,132 @@
+<!-- ioailab docs version switcher (injected into every page via mdBook docs/theme/head.hbs). -->
+<style>
+  #ioailab-version-switcher {
+    margin: 0 5px;
+    display: inline-flex;
+    align-items: center;
+  }
+  #ioailab-version-switcher select {
+    font: inherit;
+    color: var(--icons);
+    background: var(--theme-popup-bg, var(--bg));
+    border: 1px solid var(--theme-popup-border, var(--icons));
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+  }
+  #ioailab-version-switcher select:hover {
+    color: var(--icons-hover);
+  }
+</style>
+<script>
+  (function () {
+    "use strict";
+
+    // Relative to the current page so it resolves on any mount point.
+    var MANIFEST = "{{ path_to_root }}versions.json";
+
+    function currentVersion(versions) {
+      // Match a manifest path against a segment of the current URL.
+      var segments = window.location.pathname.split("/").filter(Boolean);
+      for (var i = 0; i < versions.length; i++) {
+        if (segments.indexOf(versions[i].path) !== -1) {
+          return versions[i];
+        }
+      }
+      return null;
+    }
+
+    function targetUrls(current, next) {
+      // Swap the current version path segment for the target one, keeping the
+      // same chapter; also expose the version landing page as a fallback.
+      var path = window.location.pathname;
+      var marker = "/" + current.path + "/";
+      var idx = path.lastIndexOf(marker);
+      if (idx === -1) {
+        return null;
+      }
+      var prefix = path.slice(0, idx + 1);
+      var rest = path.slice(idx + marker.length);
+      return {
+        page: prefix + next.path + "/" + rest + window.location.hash,
+        index: prefix + next.path + "/index.html",
+      };
+    }
+
+    function build(manifest) {
+      var versions = (manifest && manifest.versions) || [];
+      if (versions.length < 2) {
+        return; // Nothing to switch between (e.g. a single-version serve).
+      }
+      var current = currentVersion(versions);
+      if (!current) {
+        return;
+      }
+      var host = document.querySelector(".menu-bar .left-buttons");
+      if (!host) {
+        return;
+      }
+
+      var wrap = document.createElement("div");
+      wrap.id = "ioailab-version-switcher";
+      var select = document.createElement("select");
+      select.title = "Documentation version";
+
+      versions.forEach(function (v) {
+        var opt = document.createElement("option");
+        opt.value = v.path;
+        opt.textContent = v.label;
+        if (v.path === current.path) {
+          opt.selected = true;
+        }
+        select.appendChild(opt);
+      });
+
+      select.addEventListener("change", function () {
+        var next = versions.filter(function (v) {
+          return v.path === select.value;
+        })[0];
+        if (!next || next.path === current.path) {
+          return;
+        }
+        var urls = targetUrls(current, next);
+        if (!urls) {
+          return;
+        }
+        // Prefer the same chapter; fall back to the version landing page when
+        // that page does not exist in the target version.
+        fetch(urls.page, { method: "HEAD" })
+          .then(function (resp) {
+            window.location.href = resp.ok ? urls.page : urls.index;
+          })
+          .catch(function () {
+            window.location.href = urls.index;
+          });
+      });
+
+      wrap.appendChild(select);
+      host.appendChild(wrap);
+    }
+
+    function init() {
+      fetch(MANIFEST, { cache: "no-store" })
+        .then(function (resp) {
+          return resp.ok ? resp.json() : null;
+        })
+        .then(function (manifest) {
+          if (manifest) {
+            build(manifest);
+          }
+        })
+        .catch(function () {
+          /* No manifest reachable -> no switcher. */
+        });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>

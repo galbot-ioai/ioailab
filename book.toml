@@ -1,0 +1,21 @@
+[book]
+title = "ioailab"
+description = "Galbot-specific IsaacLab tasks, agents, and data workflows for 2026 IOAI."
+authors = ["ioailab"]
+language = "en"
+src = "docs"
+
+[build]
+build-dir = "book"
+
+[output.html]
+theme = "docs/theme"
+git-repository-url = "https://git.galbot.com/astra-synth/ioailab"
+site-url = "/ioailab/"
+
+[output.html.fold]
+enable = true
+level = 1
+
+[output.html.search]
+enable = true

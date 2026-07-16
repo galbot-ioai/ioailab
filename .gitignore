@@ -1,0 +1,127 @@
+data/
+site/
+
+# ai shit
+.humanize
+.omx
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+.pytest_cache/
+.hypothesis/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+htmlcov/
+
+# Documentation build output (mdBook)
+book/
+
+# Type checkers / linters
+.mypy_cache/
+.pyre/
+.pytype/
+.ruff_cache/
+.dmypy.json
+dmypy.json
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Local environments / secrets
+.env
+.env.*
+*.local
+
+# Logs / runtime data
+*.log
+*.pid
+*.pid.lock
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project-local tooling
+.python-version
+.worktrees/
+# ai shit
+.humanize/
+
+# Local robot USD assets
+/assets/
+
+# Local planning docs
+docs/plans/
+docs/superpowers/
+
+# Runtime artifacts
+graphify-out/
+logs/
+outputs/
+tmp/
+playground/
+
+# Isaac Sim shader caches dropped into the working dir by GUI runs
+nv_shadercache/
+shadercache/
+
+# Local imitation-learning datasets
+data/**/*.hdf5
+
+# Local third-party checkouts are installed as external packages, not committed,
+# except for repository-managed GP001 bindings.
+third_party/
+!third_party/
+third_party/*
+!third_party/remote_control_lite/
+!third_party/remote_control_lite/**
+!third_party/remote_control_lite/src/remote_control_lite/libs/*.so

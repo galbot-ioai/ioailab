@@ -1,0 +1,43 @@
+schema: ioailabScenario-v0
+frame: env
+name: pick_to_shelf_place_default
+metadata:
+  task_id: GalbotG1-PickToShelf-Place-v0
+  source_task_id: GalbotG1-PickToShelf-Nav-v0
+  description: Standalone Place starts from the terminal Nav carried-cube pose. Only
+    the carried-cube start state is authored; all other joints use task defaults.
+assets:
+  articulation:
+    robot:
+      joint_position:
+        left_arm_joint1: 1.8091378211975098
+        left_arm_joint2: -1.469736099243164
+        left_arm_joint3: -0.47556114196777344
+        left_arm_joint4: -2.4111764430999756
+        left_arm_joint5: 0.005313058849424124
+        left_arm_joint6: -0.06375501304864883
+        left_arm_joint7: -0.0303434319794178
+        left_gripper_joint: 1.1966195106506348
+        left_gripper_l_inner_knuckle_joint: 1.152393102645874
+        left_gripper_l_knuckle_joint: 1.162791132926941
+        left_gripper_r_inner_knuckle_joint: -1.1256823539733887
+        left_gripper_l_finger_joint: -1.1628459692001343
+        left_gripper_r_finger_joint: 1.1355942487716675
+      base_pose:
+      - -1.6894715374640712
+      - -1.1333194890936094
+      - 0.004713361648748249
+      - 0.00021656466963344652
+      - 0.0006740177975696556
+      - -0.716639358454268
+      - 0.6974435666876622
+  rigid_object:
+    cube:
+      root_pose:
+      - -1.517069697380066
+      - -1.6183323860168457
+      - 0.5176345705986023
+      - -0.037228118628263474
+      - -0.062376804649829865
+      - -0.7413121461868286
+      - 0.6672176718711853

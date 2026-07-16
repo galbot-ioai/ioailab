@@ -1,0 +1,50 @@
+motion_plan:
+  arm: left
+  steps:
+    - name: $config.place_approach_step_name
+      description: Stage in front of the selected sorting shelf cell.
+      target:
+        asset: $config.place_board_asset_name
+        offset: $config.place_approach_offset
+        quat_xyzw: [0.70710678, -0.70710678, 0.0, 0.0]
+        frame: world
+      gripper_open: false
+
+    - name: $config.place_insert_step_name
+      description: Insert the selected sorting object toward its shelf cell.
+      target:
+        asset: $config.place_board_asset_name
+        offset: $config.place_insert_offset
+        quat_xyzw: [0.70710678, -0.70710678, 0.0, 0.0]
+        frame: world
+      gripper_open: false
+
+    - name: $config.place_descend_step_name
+      description: Descend onto the selected cell's place point while still gripping.
+      target:
+        asset: $config.place_board_asset_name
+        offset: $config.place_release_offset
+        quat_xyzw: [0.70710678, -0.70710678, 0.0, 0.0]
+        frame: world
+      gripper_open: false
+
+    - name: $config.place_release_step_name
+      description: Open and hold the gripper after reaching the place pose.
+      gripper_open: true
+      hold_steps: 35
+
+    - name: $config.place_retreat_step_name
+      description: Withdraw from the selected shelf cell along the approach path.
+      target:
+        asset: $config.place_board_asset_name
+        offset: $config.place_approach_offset
+        quat_xyzw: [0.70710678, -0.70710678, 0.0, 0.0]
+        frame: world
+      gripper_open: true
+      hold_steps: 20
+
+    - name: $config.place_retract_step_name
+      description: Fold the arm back to the ready posture after releasing.
+      joint_positions: $config.left_arm_ready_joint_positions
+      gripper_open: true
+      hold_steps: 20

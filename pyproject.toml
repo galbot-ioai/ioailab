@@ -1,0 +1,53 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ioailab"
+dynamic = ["version"]
+description = "Galbot robot development environment built on Isaac Lab."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    # TODO: fill in the deps
+    "gymnasium>=1.2.3",
+    "numpy>=2.4.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipython>=8.0",
+    "pre-commit>=4.0",
+    "pytest>=8.0",
+    "ruff>=0.11",
+    "ty>=0.0.50",
+]
+gp001 = [
+    # GP001 support uses the repository-managed source declared in
+    # [tool.uv.sources] below. The pin records the expected package version;
+    # uv installs it from third_party/remote_control_lite, not from PyPI.
+    "remote_control_lite==0.1.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ioailab"]
+
+[tool.hatch.version]
+path = "src/ioailab/__init__.py"
+
+[tool.uv.sources]
+# Local source for the gp001 extra above. Docker installs GP001 by exporting the
+# pyproject extra, so this path is the single source of truth for the package
+# location.
+remote_control_lite = { path = "third_party/remote_control_lite" }
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+norecursedirs = [".omx", "third_party"]
+
+[tool.ruff]
+extend-exclude = [".omx", "third_party"]
+
+[tool.ruff.lint.per-file-ignores]
+"examples/*.py" = ["E402"]

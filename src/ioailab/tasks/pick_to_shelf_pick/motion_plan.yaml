@@ -1,0 +1,47 @@
+motion_plan:
+  arm: left
+  steps:
+    - name: approach_cube
+      description: Pre-grasp pose offset behind and above the cube.
+      target:
+        asset: cube
+        offset: [-0.12, 0.0, 0.02]
+        quat_xyzw: [1.0, 0.0, 0.0, 0.0]
+        frame: world
+      gripper_open: true
+
+    - name: descend_to_cube
+      description: Align horizontally onto the cube's grasp pose.
+      target:
+        asset: cube
+        offset: [0.0, 0.0, 0.02]
+        quat_xyzw: [1.0, 0.0, 0.0, 0.0]
+        frame: world
+      gripper_open: true
+
+    - name: close_left_gripper
+      description: Close and hold the gripper to secure the cube.
+      gripper_open: false
+      hold_steps: 25
+
+    - name: lift_cube
+      description: Lift the cube clear of the shelf approach path.
+      target:
+        asset: cube
+        offset: [0.0, 0.0, 0.22]
+        quat_xyzw: [1.0, 0.0, 0.0, 0.0]
+        frame: world
+      gripper_open: false
+
+    - name: carry_cube
+      description: Fold the arm to the ready carry posture for navigation.
+      joint_positions:
+        left_arm_joint1: 1.910009444500404
+        left_arm_joint2: -1.460010959112611
+        left_arm_joint3: -0.4741512242415168
+        left_arm_joint4: -2.467893642457805
+        left_arm_joint5: -0.0016785070526536992
+        left_arm_joint6: -0.1221698763763522
+        left_arm_joint7: -0.09424494344765931
+      gripper_open: false
+      hold_steps: 10
