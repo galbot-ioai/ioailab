@@ -136,16 +136,18 @@ def completion_masks(
         terminated_mask[env_id] or truncated_mask[env_id] for env_id in range(num_envs)
     )
     evaluated_success_mask = evaluation_success_mask(env_cfg, raw_env, num_envs)
+    managed_success_mask = managed_success_termination_mask(env_cfg, raw_env, num_envs)
     logged_success_mask = logged_success_termination_mask(env_cfg, extras, num_envs)
-    if logged_success_mask is not None:
-        logged_success_mask = tuple(
-            bool(logged_success_mask[env_id]) and done_mask[env_id]
+    termination_success_mask = managed_success_mask or logged_success_mask
+    if termination_success_mask is not None:
+        termination_success_mask = tuple(
+            bool(termination_success_mask[env_id]) and done_mask[env_id]
             for env_id in range(num_envs)
         )
     if evaluated_success_mask is not None:
-        if logged_success_mask is not None:
+        if termination_success_mask is not None:
             task_success_mask = tuple(
-                logged_success_mask[env_id] or evaluated_success_mask[env_id]
+                termination_success_mask[env_id] or evaluated_success_mask[env_id]
                 for env_id in range(num_envs)
             )
         else:
@@ -175,6 +177,37 @@ def completed_env_ids(masks: CompletionMasks) -> tuple[int, ...]:
         for env_id in range(len(masks.env_done))
         if masks.env_done[env_id] or masks.success[env_id] or masks.max_step[env_id]
     )
+
+
+def managed_success_termination_mask(
+    env_cfg: Any, raw_env: Any, num_envs: int
+) -> tuple[bool, ...] | None:
+    """Read the matching success term's exact per-env result from IsaacLab."""
+
+    success_term = getattr(env_cfg, "evaluation_success", None)
+    unwrapped = getattr(raw_env, "unwrapped", raw_env)
+    manager = getattr(unwrapped, "termination_manager", None)
+    active_terms = getattr(manager, "active_terms", ())
+    get_term_cfg = getattr(manager, "get_term_cfg", None)
+    get_term = getattr(manager, "get_term", None)
+    if success_term is None or not callable(get_term_cfg) or not callable(get_term):
+        return None
+
+    masks: list[tuple[bool, ...]] = []
+    for name in active_terms:
+        term_cfg = get_term_cfg(name)
+        if bool(getattr(term_cfg, "time_out", False)):
+            continue
+        if not _term_matches_success(term_cfg, success_term):
+            continue
+        try:
+            masks.append(bool_mask(get_term(name), num_envs))
+        except ValueError:
+            continue
+
+    if not masks:
+        return None
+    return tuple(any(mask[env_id] for mask in masks) for env_id in range(num_envs))
 
 
 def logged_success_termination_mask(

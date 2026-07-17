@@ -34,7 +34,12 @@ def main(argv: list[str] | None = None) -> None:
         default=None,
         help="Output HDF5 dataset path. Defaults to data/<component-preset>.hdf5.",
     )
-    parser.add_argument("--episodes", type=int, default=1)
+    parser.add_argument(
+        "--episodes",
+        type=int,
+        default=1,
+        help="Total episodes to collect across all env rows.",
+    )
     parser.add_argument("--num-envs", type=int, default=1)
     parser.add_argument("--max-steps", type=int, default=1000)
     parser.add_argument(

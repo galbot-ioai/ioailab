@@ -196,7 +196,7 @@ class ioailabEnv:
         save_end_scenario: str | Path | None = None,
         metadata: Mapping[str, Any] | None = None,
     ) -> DatasetRef:
-        """Collect agent episodes through IsaacLab ``RecorderManager``.
+        """Collect a total number of agent episodes across all vector-env rows.
 
         ioailab owns the agent stepping loop. A row is exported when IsaacLab
         reports ``terminated``/``truncated``, task success is observed,
@@ -450,7 +450,10 @@ class ioailabEnv:
         episodes: int = 1,
         max_steps: int = 1000,
     ) -> dict[str, Any]:
-        """Evaluate rows until env termination, task success, or max-step completion."""
+        """Evaluate a total number of episodes across all vector-env rows.
+
+        Rows finish independently on env termination, task success, or max steps.
+        """
 
         if not isinstance(agent, BaseAgent):
             raise TypeError("agent must inherit from BaseAgent.")

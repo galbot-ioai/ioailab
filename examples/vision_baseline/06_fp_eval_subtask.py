@@ -142,7 +142,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             f"Defaults to {DEFAULT_TIMEOUT_S}."
         ),
     )
-    parser.add_argument("--episodes", type=int, default=36)
+    parser.add_argument(
+        "--episodes",
+        type=int,
+        default=36,
+        help="Total evaluation episodes across all env rows.",
+    )
     parser.add_argument("--max-steps", type=int, default=600)
     parser.add_argument("--headless", action="store_true")
     parser.add_argument(

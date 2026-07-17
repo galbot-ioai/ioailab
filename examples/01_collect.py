@@ -26,7 +26,7 @@ def main(argv: list[str] | None = None) -> None:
         "--episodes",
         type=int,
         default=1,
-        help="Number of episodes to collect.",
+        help="Total episodes to collect across all env rows.",
     )
     parser.add_argument(
         "--num-envs", type=int, default=1, help="Parallel vectorized env rows."

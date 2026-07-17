@@ -32,7 +32,12 @@ def main(argv: list[str] | None = None) -> None:
         default="data/compound_task_demos.hdf5",
         help="Output HDF5 path used with --mode collect.",
     )
-    parser.add_argument("--episodes", type=int, default=36)
+    parser.add_argument(
+        "--episodes",
+        type=int,
+        default=36,
+        help="Total episodes across all env rows.",
+    )
     parser.add_argument("--num-envs", type=int, default=9)
     parser.add_argument("--max-steps", type=int, default=1500)
     parser.add_argument(

@@ -174,3 +174,47 @@ def test_completion_masks_does_not_broadcast_scalar_termination_log_to_vector_en
     )
 
     assert masks.success == (False, False)
+
+
+def test_completion_masks_reads_per_env_success_from_termination_manager() -> None:
+    def success_term(env) -> np.ndarray:
+        del env
+        # ManagerBasedRLEnv.step() has already reset the successful row, so
+        # recomputing the task term observes the new episode state.
+        return np.array([False, False], dtype=bool)
+
+    success_cfg = SimpleNamespace(func=success_term, params={})
+    term_cfgs = {
+        "time_out": SimpleNamespace(time_out=True),
+        "placed": SimpleNamespace(func=success_term, params={}, time_out=False),
+    }
+
+    class FakeTerminationManager:
+        active_terms = tuple(term_cfgs)
+
+        def get_term_cfg(self, name: str):
+            return term_cfgs[name]
+
+        def get_term(self, name: str) -> np.ndarray:
+            assert name == "placed"
+            return np.array([True, False], dtype=bool)
+
+    unwrapped = SimpleNamespace(termination_manager=FakeTerminationManager())
+    raw_env = SimpleNamespace(unwrapped=unwrapped)
+    env_cfg = SimpleNamespace(
+        evaluation_success=success_cfg,
+        terminations=SimpleNamespace(**term_cfgs),
+    )
+
+    masks = _masks.completion_masks(
+        env_cfg=env_cfg,
+        raw_env=raw_env,
+        terminated=np.array([True, False]),
+        truncated=np.array([False, True]),
+        extras={"log": {"Episode_Termination/placed": 0.5}},
+        current_lengths=[5, 5],
+        max_steps=10,
+        num_envs=2,
+    )
+
+    assert masks.success == (True, False)
